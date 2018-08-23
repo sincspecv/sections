@@ -77,6 +77,7 @@ class Sections {
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
+		$this->define_page_builder_hooks();
 		$this->define_public_hooks();
 
 	}
@@ -115,6 +116,11 @@ class Sections {
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-sections-admin.php';
+
+		/**
+		 * The class responsible for defining all actions that occur in the page builder.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-sections-fields.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -156,6 +162,22 @@ class Sections {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
+	}
+
+	/**
+	 * Register all of the hooks related to the page builder functionality
+	 * of the plugin.
+	 *
+	 * @since    0.1.0
+	 * @access   private
+	 */
+	private function define_page_builder_hooks() {
+
+		$plugin_fields = new Sections_Fields( $this->get_plugin_name(), $this->get_version() );
+
+		$this->loader->add_action( 'add_meta_boxes', $plugin_fields, 'add_meta_box' );
+		$this->loader->add_action( 'save_post', $plugin_fields, 'save_meta_box' );
 
 	}
 
