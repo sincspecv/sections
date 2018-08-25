@@ -118,6 +118,11 @@ class Sections {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sections-meta.php';
 
 		/**
+		 * The class responsible for printing sections on front end.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sections-render.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-sections-admin.php';
@@ -200,6 +205,9 @@ class Sections {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
+		$section_print = new Sections_Render();
+
+		$this->loader->add_action( 'the_content', $section_print, 'section_content' );
 	}
 
 	/**

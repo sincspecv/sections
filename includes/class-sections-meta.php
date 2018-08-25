@@ -59,7 +59,7 @@ class Sections_Meta {
 	 *
 	 * @return  bool|mixed|string
 	 */
-	public function save_meta( $key, $value, $sanitize_callback ) {
+	public function save_meta( $key, $value, $sanitize_callback = null ) {
 		if ( ! empty( $key ) && ! empty( $value ) ) {
 			return update_post_meta( $this->post_id, $key, esc_attr( $value ) );
 		} else {

@@ -44,13 +44,17 @@ class Sections_Fields extends Sections_Admin {
 
 		<p>
 			<label for="section_strapline"><?php _e( 'Strapline', 'section' ); ?></label><br>
-			<input type="text" name="_section_strapline" id="section_strapline" value="<?php echo $meta->get_meta( '_section_strapline' ); ?>">
+			<input class="full-width" type="text" name="_section_strapline" id="section_strapline" value="<?php echo $meta->get_meta( '_section_strapline' ); ?>">
 		</p>	<p>
 			<label for="section_heading"><?php _e( 'Heading', 'section' ); ?></label><br>
-			<input type="text" name="_section_heading" id="section_heading" value="<?php echo $meta->get_meta( '_section_heading' ); ?>">
+			<input class="full-width" type="text" name="_section_heading" id="section_heading" value="<?php echo $meta->get_meta( '_section_heading' ); ?>">
 		</p>	<p>
 			<label for="section_content"><?php _e( 'Content', 'section' ); ?></label><br>
-			<textarea name="_section_content" id="section_content" ><?php echo $meta->get_meta( '_section_content' ); ?></textarea>
+<!--			<textarea name="_section_content" id="section_content" >--><?php //echo $meta->get_meta( '_section_content' ); ?><!--</textarea>-->
+            <?php
+            $section_content = $meta->get_meta( '_section_content' );
+            wp_editor( htmlspecialchars_decode($section_content), 'section_content', $settings = array('textarea_name'=>'_section_content') );
+            ?>
 
 		</p>	<p>
 		<label for="section_background_image"><?php _e( 'Background Image', 'section' ); ?></label><br>
