@@ -11,7 +11,7 @@
  */
 ?>
 
-<div class="tfr-section">
+<div class="tfr-section" style="background:url(<?php echo $section['background_image']; ?>)">
 	<div class="tfr-section-wrap">
 		<h5><?=$section['strapline']?></h5>
 		<h3><?=$section['heading']?></h3>

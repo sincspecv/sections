@@ -45,19 +45,22 @@ class Sections_Fields extends Sections_Admin {
      *
      * @since 0.1.0
 	 * @param $post
+     *
+     * TODO: Show background image when selected
+     * TODO: Allow removal of background image
 	 */
 	public function section_html( $post ) {
 	    $meta = new Sections_Meta( $post->ID );
 		wp_nonce_field( '_section_nonce', 'section_nonce' ); ?>
 
 		<p>
-			<label for="section_strapline"><?php _e( 'Strapline', 'section' ); ?></label><br>
-			<input class="full-width" type="text" name="_section_strapline" id="section_strapline" value="<?php echo $meta->get_meta( '_section_strapline' ); ?>">
+			<label for="section_strapline"><?php _e( 'Strapline', 'sections' ); ?></label><br>
+			<input class="full-width" type="text" name="_section_strapline" id="section_strapline" value="<?php echo sanitize_text_field( $meta->get_meta( '_section_strapline' ) ); ?>">
 		</p>	<p>
-			<label for="section_heading"><?php _e( 'Heading', 'section' ); ?></label><br>
-			<input class="full-width" type="text" name="_section_heading" id="section_heading" value="<?php echo $meta->get_meta( '_section_heading' ); ?>">
+			<label for="section_heading"><?php _e( 'Heading', 'sections' ); ?></label><br>
+			<input class="full-width" type="text" name="_section_heading" id="section_heading" value="<?php echo sanitize_text_field( $meta->get_meta( '_section_heading' ) ); ?>">
 		</p>	<p>
-			<label for="section_content"><?php _e( 'Content', 'section' ); ?></label><br>
+			<label for="section_content"><?php _e( 'Content', 'sections' ); ?></label><br>
 
             <?php
             // WYSIWYG editor for content
@@ -65,9 +68,15 @@ class Sections_Fields extends Sections_Admin {
             wp_editor( htmlspecialchars_decode($section_content), 'section_content', $settings = array('textarea_name'=>'_section_content') );
             ?>
 
-		</p>	<p>
-		<label for="section_background_image"><?php _e( 'Background Image', 'section' ); ?></label><br>
-		<input type="text" name="_section_background_image" id="section_background_image" value="<?php echo $meta->get_meta( '_section_background_image' ); ?>">
+		</p>
+        <p style="text-align:right;width:100%;">
+        <?php
+            // Determine if there is an image selected
+            $image_url = ! empty( $meta->get_meta( '_section_background_image' ) ) ? esc_url_raw( $meta->get_meta( '_section_background_image' ) ) : '';
+            $button_text = ! empty( $image_url ) ? 'Replace Background Image' : 'Add Background Image';
+        ?>
+            <input type="hidden" name="_section_background_image" id="section_background_image" value="<?php echo $image_url; ?>">
+            <a href="" class="button button-primary button-large bg-image-button"><?php _e( $button_text, 'sections' ); ?></a>
 		</p><?php
 	}
 

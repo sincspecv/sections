@@ -47,7 +47,7 @@ class Sections_Render {
 			'strapline'         => sanitize_text_field( $meta->get_meta( '_section_strapline' ) ),
 			'heading'           => sanitize_text_field( $meta->get_meta( '_section_heading' ) ),
 			'content'           => wpautop( wp_kses_post( $meta->get_meta( '_section_content' ) ) ),
-			'background_image'  => esc_url_raw( $meta->get_meta( '_section_image' ) ),
+			'background_image'  => esc_url_raw( $meta->get_meta( '_section_background_image' ) ),
 			'template'          => ! empty( $meta->get_meta( '_section_template' ) ) ? $meta->get_meta( '_section_template' ) : 'default',
 		);
 
