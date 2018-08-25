@@ -11,6 +11,8 @@
 
 class Sections_Fields extends Sections_Admin {
 
+    private $meta;
+
 	public function __construct( $plugin_name, $version ) {
 	    // Call parent constructor
         parent::__construct( $plugin_name, $version );
@@ -37,38 +39,40 @@ class Sections_Fields extends Sections_Admin {
 
 
 	public function section_html( $post ) {
-	    $meta = new Sections_Meta( $post );
+	    $meta = new Sections_Meta( $post->ID );
 		wp_nonce_field( '_section_nonce', 'section_nonce' ); ?>
 
 		<p>
 			<label for="section_strapline"><?php _e( 'Strapline', 'section' ); ?></label><br>
-			<input type="text" name="section_strapline" id="section_strapline" value="<?php echo $meta->get_meta( 'section_strapline' ); ?>">
+			<input type="text" name="_section_strapline" id="section_strapline" value="<?php echo $meta->get_meta( '_section_strapline' ); ?>">
 		</p>	<p>
 			<label for="section_heading"><?php _e( 'Heading', 'section' ); ?></label><br>
-			<input type="text" name="section_heading" id="section_heading" value="<?php echo $meta->get_meta( 'section_heading' ); ?>">
+			<input type="text" name="_section_heading" id="section_heading" value="<?php echo $meta->get_meta( '_section_heading' ); ?>">
 		</p>	<p>
 			<label for="section_content"><?php _e( 'Content', 'section' ); ?></label><br>
-			<textarea name="section_content" id="section_content" ><?php echo $meta->get_meta( 'section_content' ); ?></textarea>
+			<textarea name="_section_content" id="section_content" ><?php echo $meta->get_meta( '_section_content' ); ?></textarea>
 
 		</p>	<p>
 		<label for="section_background_image"><?php _e( 'Background Image', 'section' ); ?></label><br>
-		<input type="text" name="section_background_image" id="section_background_image" value="<?php echo $meta->get_meta( 'section_background_image' ); ?>">
+		<input type="text" name="_section_background_image" id="section_background_image" value="<?php echo $meta->get_meta( '_section_background_image' ); ?>">
 		</p><?php
 	}
 
 	public function save_meta_box( $post_id ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+	    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 		if ( ! isset( $_POST['section_nonce'] ) || ! wp_verify_nonce( $_POST['section_nonce'], '_section_nonce' ) ) return;
 		if ( ! current_user_can( 'edit_post', $post_id ) ) return;
 
-		if ( isset( $_POST['section_strapline'] ) )
-			update_post_meta( $post_id, 'section_strapline', esc_attr( $_POST['section_strapline'] ) );
-		if ( isset( $_POST['section_heading'] ) )
-			update_post_meta( $post_id, 'section_heading', esc_attr( $_POST['section_heading'] ) );
-		if ( isset( $_POST['section_content'] ) )
-			update_post_meta( $post_id, 'section_content', esc_attr( $_POST['section_content'] ) );
-		if ( isset( $_POST['section_background_image'] ) )
-			update_post_meta( $post_id, 'section_background_image', esc_attr( $_POST['section_background_image'] ) );
+		$meta = new Sections_Meta( $post_id );
+
+		if ( isset( $_POST['_section_strapline'] ) )
+		    $meta->save_meta( '_section_strapline', $_POST['_section_strapline'] );
+		if ( isset( $_POST['_section_heading'] ) )
+		    $meta->save_meta( '_section_heading', $_POST['_section_heading'] );
+		if ( isset( $_POST['_section_content'] ) )
+		    $meta->save_meta( '_section_content', $_POST['_section_content'] );
+		if ( isset( $_POST['_section_background_image'] ) )
+		    $meta->save_meta( '_section_background_image', $_POST['_section_background_image'] );
 	}
 
 }
