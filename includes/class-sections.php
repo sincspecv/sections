@@ -113,6 +113,11 @@ class Sections {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sections-i18n.php';
 
 		/**
+		 * The class responsible handling section meta
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sections-meta.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-sections-admin.php';
