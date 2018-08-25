@@ -11,13 +11,16 @@
 
 class Sections_Fields extends Sections_Admin {
 
-    private $meta;
-
 	public function __construct( $plugin_name, $version ) {
 	    // Call parent constructor
         parent::__construct( $plugin_name, $version );
     }
 
+	/**
+	 * Add section meta box to pages and posts
+     *
+     * @since 0.1.0
+	 */
 	public function add_meta_box() {
 		add_meta_box(
 			'section-section',
@@ -37,7 +40,12 @@ class Sections_Fields extends Sections_Admin {
 		);
 	}
 
-
+	/**
+     * Markup for the meta fields
+     *
+     * @since 0.1.0
+	 * @param $post
+	 */
 	public function section_html( $post ) {
 	    $meta = new Sections_Meta( $post->ID );
 		wp_nonce_field( '_section_nonce', 'section_nonce' ); ?>
@@ -50,8 +58,9 @@ class Sections_Fields extends Sections_Admin {
 			<input class="full-width" type="text" name="_section_heading" id="section_heading" value="<?php echo $meta->get_meta( '_section_heading' ); ?>">
 		</p>	<p>
 			<label for="section_content"><?php _e( 'Content', 'section' ); ?></label><br>
-<!--			<textarea name="_section_content" id="section_content" >--><?php //echo $meta->get_meta( '_section_content' ); ?><!--</textarea>-->
+
             <?php
+            // WYSIWYG editor for content
             $section_content = $meta->get_meta( '_section_content' );
             wp_editor( htmlspecialchars_decode($section_content), 'section_content', $settings = array('textarea_name'=>'_section_content') );
             ?>
@@ -62,6 +71,12 @@ class Sections_Fields extends Sections_Admin {
 		</p><?php
 	}
 
+	/**
+     * Save the meta data
+     *
+     * @since 0.1.0
+	 * @param $post_id
+	 */
 	public function save_meta_box( $post_id ) {
 	    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 		if ( ! isset( $_POST['section_nonce'] ) || ! wp_verify_nonce( $_POST['section_nonce'], '_section_nonce' ) ) return;
@@ -81,12 +96,3 @@ class Sections_Fields extends Sections_Admin {
 
 }
 
-//add_action( 'add_meta_boxes', 'section_add_meta_box' );
-//add_action( 'save_post', 'section_save' );
-
-/*
-		Usage: section_get_meta( 'section_strapline' )
-		Usage: section_get_meta( 'section_heading' )
-		Usage: section_get_meta( 'section_content' )
-		Usage: section_get_meta( 'section_background_image' )
-	*/
