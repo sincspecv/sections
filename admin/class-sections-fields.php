@@ -51,21 +51,30 @@ class Sections_Fields extends Sections_Admin {
 	 */
 	public function section_html( $post ) {
 	    $meta = new Sections_Meta( $post->ID );
-		wp_nonce_field( '_section_nonce', 'section_nonce' ); ?>
+		wp_nonce_field( '_section_nonce', 'section_nonce' );
+
+		$sections = !empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections' ) : array( '_sections' );
+		$count = count( $sections );
+		for ( $i = 0; $i < $count; $i++ ) :
+
+        $strapline  = isset( $sections[$i]['strapline'] ) ? $sections[$i]['strapline'] : '';
+		$heading    = isset( $sections[$i]['heading'] ) ? $sections[$i]['heading'] : '' ;
+
+        ?>
 
 		<p>
 			<label for="section_strapline"><?php _e( 'Strapline', 'sections' ); ?></label><br>
-			<input class="full-width" type="text" name="_section_strapline" id="section_strapline" value="<?php echo sanitize_text_field( $meta->get_meta( '_section_strapline' ) ); ?>">
+			<input class="full-width" type="text" name="_sections[<?=$i?>][strapline]" id="section_strapline" value="<?php echo esc_attr( $strapline ); ?>">
 		</p>	<p>
 			<label for="section_heading"><?php _e( 'Heading', 'sections' ); ?></label><br>
-			<input class="full-width" type="text" name="_section_heading" id="section_heading" value="<?php echo sanitize_text_field( $meta->get_meta( '_section_heading' ) ); ?>">
+			<input class="full-width" type="text" name="_sections[<?=$i?>][heading]" id="section_heading" value="<?php echo esc_attr( $heading ); ?>">
 		</p>	<p>
 			<label for="section_content"><?php _e( 'Content', 'sections' ); ?></label><br>
 
             <?php
             // WYSIWYG editor for content
             $section_content = $meta->get_meta( '_section_content' );
-            wp_editor( htmlspecialchars_decode($section_content), 'section_content', $settings = array('textarea_name'=>'_section_content') );
+            wp_editor( htmlspecialchars_decode( $section_content ), 'section_content', $settings = array('textarea_name'=>'_section_content') );
             ?>
 
 		</p>
@@ -77,7 +86,11 @@ class Sections_Fields extends Sections_Admin {
         ?>
             <input type="hidden" name="_section_background_image" id="section_background_image" value="<?php echo $image_url; ?>">
             <a href="" class="button button-primary button-large bg-image-button"><?php _e( $button_text, 'sections' ); ?></a>
-		</p><?php
+        </p>
+
+        <?php
+        endfor;
+
 	}
 
 	/**
@@ -93,6 +106,10 @@ class Sections_Fields extends Sections_Admin {
 
 		$meta = new Sections_Meta( $post_id );
 
+//		var_dump($_POST);
+
+		if( isset( $_POST['_sections'] ) )
+		    $meta->save_meta( '_sections', $_POST['_sections'] );
 		if ( isset( $_POST['_section_strapline'] ) )
 		    $meta->save_meta( '_section_strapline', $_POST['_section_strapline'] );
 		if ( isset( $_POST['_section_heading'] ) )

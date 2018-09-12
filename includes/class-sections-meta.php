@@ -40,8 +40,8 @@ class Sections_Meta {
 	 *
 	 * @return  bool|mixed|string
 	 */
-	public function get_meta( $key ) {
-		$field = get_post_meta( $this->post_id, $key, true );
+	public function get_meta( $key, $single = true ) {
+		$field = get_post_meta( $this->post_id, $key, $single );
 		if ( ! empty( $field ) ) {
 			return is_array( $field ) ? stripslashes_deep( $field ) : stripslashes( wp_kses_decode_entities( $field ) );
 		} else {
@@ -61,7 +61,8 @@ class Sections_Meta {
 	 */
 	public function save_meta( $key, $value, $sanitize_callback = null ) {
 		if ( ! empty( $key ) && ! empty( $value ) ) {
-			return update_post_meta( $this->post_id, $key, esc_attr( $value ) );
+//			$value = is_array( $value ) ? array_map( 'addshlashes', $value ) : addslashes( wp_kses_post( $value ) );
+			return update_post_meta( $this->post_id, $key, $value );
 		} else {
 			return false;
 		}
