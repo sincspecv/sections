@@ -37,15 +37,19 @@ class Sections_Meta {
 	 *
 	 * @since   0.1.0
 	 * @param   string  $key                Meta key to retrieve
-	 * @param   string  $sanitize_callback  Function to sanitize data
+	 * @param   mixed   $sanitize_callback  Function to sanitize data. Set to FALSE to not sanitize data
 	 * @param   bool    $single             Is meta key unique
 	 *
 	 * @return  bool|mixed|string
 	 */
-	public function get_meta( $key, $sanitize_callback = 'esc_attr', $single = true ) {
+	public function get_meta( $key, $sanitize_callback = 'esc_attr', $single = TRUE ) {
 		$value = get_post_meta( $this->post_id, $key, $single );
 		if ( ! empty( $value ) ) {
-			return is_array( $value ) ? map_deep( $value, $sanitize_callback ) : call_user_func( $sanitize_callback, $value );
+			if ( FALSE !== $sanitize_callback ) {
+				return is_array( $value ) ? map_deep( $value, $sanitize_callback ) : call_user_func( $sanitize_callback, $value );
+			} else {
+				return $value;
+			}
 		} else {
 			return false;
 		}
@@ -57,7 +61,7 @@ class Sections_Meta {
 	 * @since   0.1.0
 	 * @param   string  $key                Meta key to update
 	 * @param   string  $value              Value to store
-	 * @param   string  $sanitize_callback  Function to sanitize data
+	 * @param   mixed   $sanitize_callback  Function to sanitize data
 	 *
 	 * @return  bool|mixed|string
 	 */
@@ -65,10 +69,9 @@ class Sections_Meta {
 		if ( ! empty( $key ) && ! empty( $value ) ) {
 
 			// Sanitize data per user defined function
-			if ( ! empty( $sanitize_callback ) ) {
-				$value = call_user_func( $sanitize_callback, $value );
+			if ( ! empty( $sanitize_callback )  && FALSE !== $sanitize_callback ) {
+				$value = is_array( $value ) ? map_deep( $value, $sanitize_callback ) : call_user_func( $sanitize_callback, $value );
 			}
-
 			return update_post_meta( $this->post_id, $key, $value );
 		} else {
 			return false;
