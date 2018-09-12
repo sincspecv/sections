@@ -46,15 +46,17 @@ class Sections_Fields extends Sections_Admin {
      * @since 0.1.0
 	 * @param $post
      *
-     * TODO: Show background image when selected
-     * TODO: Allow removal of background image
+     * TODO: Show image when selected
+     * TODO: Allow removal of image
 	 */
-	public function section_html( $post ) {
+	public static function section_html( $post ) {
 	    $meta = new Sections_Meta( $post->ID );
 		wp_nonce_field( '_section_nonce', 'section_nonce' );
 
-		$sections = !empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections' ) : array( '_sections' );
+		$sections = ! empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections', 'wp_kses_post' ) : array( '_sections' );
 		$count = count( $sections );
+
+		// Build out the meta boxes
 		for ( $i = 0; $i < $count; $i++ ) :
 
         $strapline  = isset( $sections[$i]['strapline'] ) ? $sections[$i]['strapline'] : '';
@@ -106,10 +108,8 @@ class Sections_Fields extends Sections_Admin {
 
 		$meta = new Sections_Meta( $post_id );
 
-//		var_dump($_POST);
-
 		if( isset( $_POST['_sections'] ) )
-		    $meta->save_meta( '_sections', $_POST['_sections'] );
+		    $meta->save_meta( '_sections', $_POST['_sections'], 'stripslashes_deep' );
 		if ( isset( $_POST['_section_strapline'] ) )
 		    $meta->save_meta( '_section_strapline', $_POST['_section_strapline'] );
 		if ( isset( $_POST['_section_heading'] ) )
