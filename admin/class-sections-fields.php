@@ -53,44 +53,47 @@ class Sections_Fields extends Sections_Admin {
 	    $meta = new Sections_Meta( $post->ID );
 		wp_nonce_field( '_section_nonce', 'section_nonce' );
 
-		$sections = ! empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections', 'wp_kses_post' ) : array( '_sections' );
+		$sections = ! empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections', FALSE ) : array( '_sections' );
 		$count = count( $sections );
 
 		// Build out the meta boxes
 		for ( $i = 0; $i < $count; $i++ ) :
 
-        $strapline  = isset( $sections[$i]['strapline'] ) ? $sections[$i]['strapline'] : '';
-		$heading    = isset( $sections[$i]['heading'] ) ? $sections[$i]['heading'] : '' ;
+            $section = $sections[$i];
 
-        ?>
+		    // Escape meta data
+            $strapline  = isset( $section['strapline'] ) ? esc_attr( $sections[$i]['strapline'] ) : '';
+            $heading    = isset( $section['heading'] ) ? esc_attr( $sections[$i]['heading'] ) : '' ;
+            $content    = isset( $section['content'] ) ? wp_kses_post( esc_textarea( $section['content'] ) ) : '';
+            $image_url  = isset( $section['image_url'] ) ? esc_url_raw( $section['image_url'] ) : '';
 
-		<p>
-			<label for="section_strapline"><?php _e( 'Strapline', 'sections' ); ?></label><br>
-			<input class="full-width" type="text" name="_sections[<?=$i?>][strapline]" id="section_strapline" value="<?php echo esc_attr( $strapline ); ?>">
-		</p>	<p>
-			<label for="section_heading"><?php _e( 'Heading', 'sections' ); ?></label><br>
-			<input class="full-width" type="text" name="_sections[<?=$i?>][heading]" id="section_heading" value="<?php echo esc_attr( $heading ); ?>">
-		</p>	<p>
-			<label for="section_content"><?php _e( 'Content', 'sections' ); ?></label><br>
-
-            <?php
-            // WYSIWYG editor for content
-            $section_content = $meta->get_meta( '_section_content' );
-            wp_editor( htmlspecialchars_decode( $section_content ), 'section_content', $settings = array('textarea_name'=>'_section_content') );
             ?>
 
-		</p>
-        <p style="text-align:right;width:100%;">
-        <?php
-            // Determine if there is an image selected
-            $image_url = ! empty( $meta->get_meta( '_section_background_image' ) ) ? esc_url_raw( $meta->get_meta( '_section_background_image' ) ) : '';
-            $button_text = ! empty( $image_url ) ? 'Replace Background Image' : 'Add Background Image';
-        ?>
-            <input type="hidden" name="_section_background_image" id="section_background_image" value="<?php echo $image_url; ?>">
-            <a href="" class="button button-primary button-large bg-image-button"><?php _e( $button_text, 'sections' ); ?></a>
-        </p>
+            <p>
+                <label for="section_strapline"><?php _e( 'Strapline', 'sections' ); ?></label><br>
+                <input class="full-width" type="text" name="_sections[<?=$i?>][strapline]" id="section_strapline" value="<?php echo esc_attr( $strapline ); ?>">
+            </p>	<p>
+                <label for="section_heading"><?php _e( 'Heading', 'sections' ); ?></label><br>
+                <input class="full-width" type="text" name="_sections[<?=$i?>][heading]" id="section_heading" value="<?php echo esc_attr( $heading ); ?>">
+            </p>	<p>
+                <label for="section_content"><?php _e( 'Content', 'sections' ); ?></label><br>
 
-        <?php
+                <?php
+                // WYSIWYG editor for content
+                wp_editor( htmlspecialchars_decode( $content ), 'section_content', $settings = array('textarea_name' => "_sections[{$i}][content]") );
+                ?>
+
+            </p>
+            <p style="text-align:right;width:100%;">
+            <?php
+                // Determine if there is an image selected
+                $button_text = ! empty( $image_url ) ? 'Replace Section Image' : 'Add Section Image';
+            ?>
+                <input type="hidden" name="_sections[<?=$i?>][image_url]" id="section_image" value="<?php echo $image_url; ?>">
+                <a href="" class="button button-primary button-large bg-image-button"><?php _e( $button_text, 'sections' ); ?></a>
+            </p>
+
+            <?php
         endfor;
 
 	}
