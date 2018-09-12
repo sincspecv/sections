@@ -20,7 +20,7 @@ jQuery(function($){
       }).on('select', function() { // it also has "open" and "close" events
         var attachment = custom_uploader.state().get('selection').first().toJSON();
         // $(button).removeClass('button').html('<img class="true_pre_image" src="' + attachment.url + '" style="max-width:95%;display:block;" />').next().val(attachment.id).next().show();
-        $('#section_background_image').val(attachment.url);
+        $('#section_image').val(attachment.url);
       })
         .open();
   });

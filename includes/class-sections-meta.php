@@ -36,14 +36,20 @@ class Sections_Meta {
 	 * Method to retrieve meta key
 	 *
 	 * @since   0.1.0
-	 * @param   string  $key  Meta key to retrieve
+	 * @param   string  $key                Meta key to retrieve
+	 * @param   mixed   $sanitize_callback  Function to sanitize data. Set to FALSE to not sanitize data
+	 * @param   bool    $single             Is meta key unique
 	 *
 	 * @return  bool|mixed|string
 	 */
-	public function get_meta( $key ) {
-		$field = get_post_meta( $this->post_id, $key, true );
-		if ( ! empty( $field ) ) {
-			return is_array( $field ) ? stripslashes_deep( $field ) : stripslashes( wp_kses_decode_entities( $field ) );
+	public function get_meta( $key, $sanitize_callback = 'esc_attr', $single = TRUE ) {
+		$value = get_post_meta( $this->post_id, $key, $single );
+		if ( ! empty( $value ) ) {
+			if ( FALSE !== $sanitize_callback ) {
+				return is_array( $value ) ? map_deep( $value, $sanitize_callback ) : call_user_func( $sanitize_callback, $value );
+			} else {
+				return $value;
+			}
 		} else {
 			return false;
 		}
@@ -53,15 +59,20 @@ class Sections_Meta {
 	 * Method to update post meta
 	 *
 	 * @since   0.1.0
-	 * @param   string  $key    Meta key to update
-	 * @param   string  $value  Value to store
-	 * @param   string  $sanitize_callback  Not currently used
+	 * @param   string  $key                Meta key to update
+	 * @param   string  $value              Value to store
+	 * @param   mixed   $sanitize_callback  Function to sanitize data
 	 *
 	 * @return  bool|mixed|string
 	 */
 	public function save_meta( $key, $value, $sanitize_callback = null ) {
 		if ( ! empty( $key ) && ! empty( $value ) ) {
-			return update_post_meta( $this->post_id, $key, esc_attr( $value ) );
+
+			// Sanitize data per user defined function
+			if ( ! empty( $sanitize_callback )  && FALSE !== $sanitize_callback ) {
+				$value = is_array( $value ) ? map_deep( $value, $sanitize_callback ) : call_user_func( $sanitize_callback, $value );
+			}
+			return update_post_meta( $this->post_id, $key, $value );
 		} else {
 			return false;
 		}

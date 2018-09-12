@@ -29,7 +29,9 @@ class Sections_Render {
 	 */
 	public function __construct() {
 		global $post;
-		$this->post_id = $post->ID;
+
+		if( ! empty( $post ) )
+			$this->post_id = is_array( $post ) ? $post['ID'] : $post->ID;
 	}
 
 	/**
