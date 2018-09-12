@@ -67,8 +67,8 @@ class Sections {
 	 * @since    0.1.0
 	 */
 	public function __construct() {
-		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-			$this->version = PLUGIN_NAME_VERSION;
+		if ( defined( 'TFR_SECTIONS_VERSION' ) ) {
+			$this->version = TFR_SECTIONS_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
