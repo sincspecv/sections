@@ -16,7 +16,7 @@
  * Plugin Name:       Sections
  * Plugin URI:        https://thefancyrobot.com
  * Description:       Allows you to build pages in a modular way, without the overhead of a typical page builder plugin
- * Version:           0.1.0
+ * Version:           0.1.2
  * Author:            Matthew Schroeter
  * Author URI:        https://thefancyrobot.com
  * License:           GPL-2.0+
@@ -32,10 +32,9 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
+ * https://semver.org
  */
-define( 'TFR_SECTIONS_VERSION', '0.1.1' );
+define( 'TFR_SECTIONS_VERSION', '0.1.2' );
 
 /**
  * The code that runs during plugin activation.

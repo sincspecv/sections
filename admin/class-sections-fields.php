@@ -45,9 +45,6 @@ class Sections_Fields extends Sections_Admin {
      *
      * @since 0.1.0
 	 * @param $post
-     *
-     * TODO: Show image when selected
-     * TODO: Allow removal of image
 	 */
 	public static function section_html( $post ) {
 	    $meta = new Sections_Meta( $post->ID );
@@ -62,10 +59,10 @@ class Sections_Fields extends Sections_Admin {
             $section = $sections[$i];
 
 		    // Escape meta data
-            $strapline  = isset( $section['strapline'] ) ? esc_attr( $sections[$i]['strapline'] ) : '';
-            $heading    = isset( $section['heading'] ) ? esc_attr( $sections[$i]['heading'] ) : '' ;
-            $content    = isset( $section['content'] ) ? wp_kses_post( esc_textarea( $section['content'] ) ) : '';
-            $image_url  = isset( $section['image_url'] ) ? esc_url_raw( $section['image_url'] ) : '';
+            $strapline  = isset( $section['strapline'] ) ? $sections[$i]['strapline'] : '';
+            $heading    = isset( $section['heading'] ) ? $sections[$i]['heading'] : '' ;
+            $content    = isset( $section['content'] ) ? $section['content'] : '';
+            $image_url  = isset( $section['image_url'] ) ? $section['image_url'] : '';
 
             ?>
 
@@ -80,18 +77,27 @@ class Sections_Fields extends Sections_Admin {
 
                 <?php
                 // WYSIWYG editor for content
-                wp_editor( htmlspecialchars_decode( $content ), 'section_content', $settings = array('textarea_name' => "_sections[{$i}][content]") );
+                $content = do_shortcode( $content );
+                $content = esc_textarea( $content );
+                $content = wp_kses_post( $content );
+                wp_editor( htmlspecialchars_decode( $content ), 'section_content', array('textarea_name' => "_sections[{$i}][content]") );
                 ?>
 
             </p>
-            <p style="text-align:right;width:100%;">
+            <div style="text-align:right;width:100%;display:inline-block;">
             <?php
                 // Determine if there is an image selected
-                $button_text = ! empty( $image_url ) ? 'Replace Section Image' : 'Add Section Image';
+                $button_text        = ! empty( $image_url ) ? 'Replace Section Image' : 'Add Section Image';
+                $show_remove_button = ! empty( $image_url ) ? 'inline-block' : 'none';
+
             ?>
-                <input type="hidden" name="_sections[<?=$i?>][image_url]" id="section_image" value="<?php echo $image_url; ?>">
-                <a href="" class="button button-primary button-large bg-image-button"><?php _e( $button_text, 'sections' ); ?></a>
-            </p>
+                <div id="section-image" style="display:inline-block;float:left;max-width:50%;">
+                    <img src="<?php echo esc_url_raw( $image_url ) ?>" style="max-width: 100%;">
+                </div>
+                <input type="hidden" name="_sections[<?=$i?>][image_url]" id="section-image-src" value="<?php echo esc_url_raw( $image_url ); ?>">
+                <a href="" class="button button-primary button-large bg-image-button"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
+                <a href="" class="button button-secondary button-large remove-image-button" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
+            </div>
 
             <?php
         endfor;
