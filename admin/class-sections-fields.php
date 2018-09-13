@@ -80,7 +80,7 @@ class Sections_Fields extends Sections_Admin {
                 $content = do_shortcode( $content );
                 $content = esc_textarea( $content );
                 $content = wp_kses_post( $content );
-                wp_editor( htmlspecialchars_decode( $content ), 'section_content', $settings = array('textarea_name' => "_sections[{$i}][content]") );
+                wp_editor( htmlspecialchars_decode( $content ), 'section_content', array('textarea_name' => "_sections[{$i}][content]") );
                 ?>
 
             </p>
