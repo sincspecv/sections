@@ -59,8 +59,8 @@ class Sections_Fields extends Sections_Admin {
             $section = $sections[$i];
 
 		    // Escape meta data
-            $strapline  = isset( $section['strapline'] ) ? $sections[$i]['strapline'] : '';
-            $heading    = isset( $section['heading'] ) ? $sections[$i]['heading'] : '' ;
+            $strapline  = isset( $section['strapline'] ) ? $section['strapline'] : '';
+            $heading    = isset( $section['heading'] ) ? $section['heading'] : '' ;
             $content    = isset( $section['content'] ) ? $section['content'] : '';
             $image_url  = isset( $section['image_url'] ) ? $section['image_url'] : '';
 
@@ -68,11 +68,13 @@ class Sections_Fields extends Sections_Admin {
 
             <p>
                 <label for="section_strapline"><?php _e( 'Strapline', 'sections' ); ?></label><br>
-                <input class="full-width" type="text" name="_sections[<?=$i?>][strapline]" id="section_strapline" value="<?php echo esc_attr( $strapline ); ?>">
-            </p>	<p>
+                <input class="full-width" type="text" name="_sections[<?php echo absint( $i ); ?>][strapline]" id="section_strapline_<?php echo absint( $i); ?>" value="<?php echo esc_attr( $strapline ); ?>">
+            </p>
+            <p>
                 <label for="section_heading"><?php _e( 'Heading', 'sections' ); ?></label><br>
-                <input class="full-width" type="text" name="_sections[<?=$i?>][heading]" id="section_heading" value="<?php echo esc_attr( $heading ); ?>">
-            </p>	<p>
+                <input class="full-width" type="text" name="_sections[<?php echo absint( $i ); ?>][heading]" id="section_heading_<?php echo absint( $i ); ?>" value="<?php echo esc_attr( $heading ); ?>">
+            </p>
+            <p>
                 <label for="section_content"><?php _e( 'Content', 'sections' ); ?></label><br>
 
                 <?php
@@ -100,7 +102,85 @@ class Sections_Fields extends Sections_Admin {
             </div>
 
             <?php
+
+            // Print sub section boxes
+			$sub_sections = isset( $section['sub_sections'] ) ? $section['sub_sections'] : array();
+			$sub_section_count = count( $sub_sections );
+
+			for ( $x = 0; $x < $sub_section_count; $x++ ) {
+			    self::sub_section_html( $sub_sections[$x], $i );
+            }
         endfor;
+
+	}
+
+	/**
+	 * Markup for the sub section fields
+	 *
+	 * @since 0.2.0
+	 * @param $post
+     *
+     * @return mixed
+	 */
+	public static function sub_section_html( $section, $section_index, $sub_section_index ) {
+		// Make sure there are sub sections before printing
+//        if( ! isset( $section['sub_sections'] ) || count( $section['sub_sections'] ) <= 0 ) {
+//            return null;
+//        }
+//
+//		$sub_sections = $section['sub_sections'];
+//		$count = count( $sub_sections );
+//
+//		// Build out the meta boxes
+//		for ( $i = 0; $i < $count; $i++ ) :
+
+			// Escape meta data
+			$strapline  = isset( $section['strapline'] ) ? $section['strapline'] : '';
+			$heading    = isset( $section['heading'] ) ? $section['heading'] : '' ;
+			$content    = isset( $section['content'] ) ? $section['content'] : '';
+			$image_url  = isset( $section['image_url'] ) ? $section['image_url'] : '';
+
+			?>
+
+            <p>
+                <label for="section_strapline"><?php _e( 'Strapline', 'sections' ); ?></label><br>
+                <input class="full-width" type="text" name="_sections[<?php echo absint( $section_index ); ?>][sub_sections][<?php echo absint( $sub_section_index ); ?>][strapline]" id="sub_section_strapline_<?=$i?>" value="<?php echo esc_attr( $strapline ); ?>">
+            </p>
+
+            <p>
+                <label for="section_heading"><?php _e( 'Heading', 'sections' ); ?></label><br>
+                <input class="full-width" type="text" name="_sections[<?php echo absint( $section_index ); ?>][sub_sections][<?php echo absint( $sub_section_index ); ?>][heading]" id="sub_section_heading_<?=$i?>" value="<?php echo esc_attr( $heading ); ?>">
+            </p>
+
+            <p>
+                <label for="section_content"><?php _e( 'Content', 'sections' ); ?></label><br>
+
+                <?php
+                // WYSIWYG editor for content
+                $content = do_shortcode( $content );
+                $content = esc_textarea( $content );
+                $content = wp_kses_post( $content );
+                wp_editor( htmlspecialchars_decode( $content ), 'section_content', array('textarea_name' => "_sections[{$section_index}][sub_sections][{$sub_section_index}][content]") );
+                ?>
+
+            </p>
+            <div style="text-align:right;width:100%;display:inline-block;">
+				<?php
+				// Determine if there is an image selected
+				$button_text        = ! empty( $image_url ) ? 'Replace Section Image' : 'Add Section Image';
+				$show_remove_button = ! empty( $image_url ) ? 'inline-block' : 'none';
+
+				?>
+                <div id="sub_section_image" style="display:inline-block;float:left;max-width:50%;">
+                    <img src="<?php echo esc_url_raw( $image_url ) ?>" style="max-width: 100%;">
+                </div>
+                <input type="hidden" name="_sections[<?php echo absint( $section_index ); ?>][sub_sections][<?php echo absint( $sub_section_index ); ?>][image_url]" id="sub_section_image_src" data-index="<?php echo absint( $sub_section_index ); ?>" value="<?php echo esc_url_raw( $image_url ); ?>">
+                <a href="" class="button button-primary button-large bg-image-button"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
+                <a href="" class="button button-secondary button-large remove-image-button" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
+            </div>
+
+		<?php
+//		endfor;
 
 	}
 
