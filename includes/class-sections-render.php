@@ -45,15 +45,17 @@ class Sections_Render {
 	public function get_section_meta( $post_id ) {
 		$meta = new Sections_Meta( $post_id );
 
-		$section_meta = array(
-			'strapline'         => sanitize_text_field( $meta->get_meta( '_section_strapline' ) ),
-			'heading'           => sanitize_text_field( $meta->get_meta( '_section_heading' ) ),
-			'content'           => wpautop( wp_kses_post( $meta->get_meta( '_section_content' ) ) ),
-			'background_image'  => esc_url_raw( $meta->get_meta( '_section_background_image' ) ),
-			'template'          => ! empty( $meta->get_meta( '_section_template' ) ) ? $meta->get_meta( '_section_template' ) : 'default',
-		);
+		$section_meta = ! empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections', FALSE ) : array();
 
-		$section_data = apply_filters( 'section_meta', $section_meta );
+//		$section_meta = array(
+//			'strapline'         => sanitize_text_field( $meta->get_meta( '_section_strapline' ) ),
+//			'heading'           => sanitize_text_field( $meta->get_meta( '_section_heading' ) ),
+//			'content'           => wpautop( wp_kses_post( $meta->get_meta( '_section_content' ) ) ),
+//			'background_image'  => esc_url_raw( $meta->get_meta( '_section_background_image' ) ),
+//			'template'          => ! empty( $meta->get_meta( '_section_template' ) ) ? $meta->get_meta( '_section_template' ) : 'default',
+//		);
+
+		$section_data = apply_filters( 'section_data', $section_meta );
 
 		return $section_data;
 	}
@@ -86,33 +88,38 @@ class Sections_Render {
 		global $post;
 
 		// The section meta to pass to the section template
-		$section = $this->get_section_meta( $post->ID );
+		$sections = $this->get_section_meta( $post->ID );
 
-		// Get the template to use
-		$template = $this->get_template( $section['template'] );
+		foreach ( $sections as $section ) {
+			// Get the template to use
+			$section_template = ! empty( $section['template'] ) ? esc_attr( $section['template'] ) : 'default';
+			$template = $this->get_template( $section_template );
 
-		// Create empty markup variable in case there are not sections
-		$markup = '';
+			// Create empty markup variable in case there is no section data
+			$markup = '';
 
-		// Make sure there is section data
-		if( ! $section['strapline'] && ! $section['heading'] && ! $section['content'] && ! $section['background_image'] ) {
+			// Make sure there is section data
+			if( ! $section['strapline'] && ! $section['heading'] && ! $section['content'] && ! $section['background_image'] ) {
 
-			//DO NOTHING
+				//DO NOTHING
 
-		} else {
+			} else {
 
-			// Render the template with the section meta
-			ob_start();
+				// Render the template with the section meta
+				ob_start();
 
-			include $template;
-			$markup .= ob_get_contents();
+				include $template;
+				$markup .= ob_get_contents();
 
-			ob_end_clean();
+				ob_end_clean();
 
-			// Append sections to content and make images responsive
-			$content .= wp_make_content_images_responsive( $markup );
+				// Append sections to content and make images responsive
+				$content .= wp_make_content_images_responsive( $markup );
 
+			}
 		}
+
+
 
 		return $content;
 	}
