@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d971a07de31943b4b5dbac223295ef60)](https://www.codacy.com/app/sincspecv/sections?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sincspecv/sections&amp;utm_campaign=Badge_Grade)
+
 ### Sections WordPress Plugin
 
 Sections is a plugin that allows a modular page build without the overhead and complexity of a typical page builder. It is aimed at the developer who typically creates page templates from scratch.

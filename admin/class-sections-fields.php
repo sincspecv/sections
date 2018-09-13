@@ -95,8 +95,8 @@ class Sections_Fields extends Sections_Admin {
                     <img src="<?php echo esc_url_raw( $image_url ) ?>" style="max-width: 100%;">
                 </div>
                 <input type="hidden" name="_sections[<?=$i?>][image_url]" id="section-image-src" value="<?php echo esc_url_raw( $image_url ); ?>">
-                <a href="" class="button button-primary button-large bg-image-button"><?php _e( $button_text, 'sections' ); ?></a><br />
-                <a href="" class="button button-secondary button-large remove-image-button" style="display:<?php echo $show_remove_button; ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
+                <a href="" class="button button-primary button-large bg-image-button"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
+                <a href="" class="button button-secondary button-large remove-image-button" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
             </div>
 
             <?php

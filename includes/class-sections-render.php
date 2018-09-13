@@ -47,14 +47,6 @@ class Sections_Render {
 
 		$section_meta = ! empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections', FALSE ) : array();
 
-//		$section_meta = array(
-//			'strapline'         => sanitize_text_field( $meta->get_meta( '_section_strapline' ) ),
-//			'heading'           => sanitize_text_field( $meta->get_meta( '_section_heading' ) ),
-//			'content'           => wpautop( wp_kses_post( $meta->get_meta( '_section_content' ) ) ),
-//			'background_image'  => esc_url_raw( $meta->get_meta( '_section_background_image' ) ),
-//			'template'          => ! empty( $meta->get_meta( '_section_template' ) ) ? $meta->get_meta( '_section_template' ) : 'default',
-//		);
-
 		$section_data = apply_filters( 'section_data', $section_meta );
 
 		return $section_data;
@@ -119,7 +111,7 @@ class Sections_Render {
 			}
 		}
 
-
+		add_action( 'section_content' );
 
 		return $content;
 	}
