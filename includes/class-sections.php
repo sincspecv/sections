@@ -131,6 +131,7 @@ class Sections {
 		 * The class responsible for defining all actions that occur in the page builder.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-sections-fields.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/sections-ajax.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
