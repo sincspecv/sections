@@ -55,10 +55,11 @@ class Sections_Fields extends Sections_Admin {
 	    $meta = new Sections_Meta( $post->ID );
 		wp_nonce_field( '_section_nonce', 'section_nonce' );
 
-		$sections = ! empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections', FALSE ) : array( '_sections' );
+		$sections = ! empty( $meta->get_meta( '_sections' ) ) ? $meta->get_meta( '_sections', FALSE ) : array( null );
 		$count = count( $sections );
 
-		echo '';
+		do_action( 'before_section_html' );
+
 		// Build out the meta boxes
 		for ( $i = 0; $i < $count; $i++ ) :
 
@@ -125,7 +126,7 @@ class Sections_Fields extends Sections_Admin {
             <?php
         endfor;
 
-        echo '';
+        do_action( 'after_section_html' );
 	}
 
 	/**
@@ -141,6 +142,9 @@ class Sections_Fields extends Sections_Admin {
      * TODO: Make WYSIWYG work without page refresh
 	 */
 	public static function sub_section_html( $section, $section_index, $sub_section_index ) {
+
+		do_action( 'before_sub_section_html' );
+
         // Make sure user can edit posts
         if ( current_user_can( 'edit_posts' ) ) :
 			// Escape meta data
@@ -148,7 +152,6 @@ class Sections_Fields extends Sections_Admin {
 			$heading    = isset( $section['heading'] ) ? $section['heading'] : '' ;
 			$content    = isset( $section['content'] ) ? $section['content'] : '';
 			$image_url  = isset( $section['image_url'] ) ? $section['image_url'] : '';
-
 			?>
             <div class="tfr-sub-section">
                 <p>
@@ -184,12 +187,14 @@ class Sections_Fields extends Sections_Admin {
                         <img src="<?php echo esc_url_raw( $image_url ) ?>" style="max-width: 100%;">
                     </div>
                     <input type="hidden" name="_sections[<?php echo absint( $section_index ); ?>][sub_sections][<?php echo absint( $sub_section_index ); ?>][image_url]" id="section_image_src_<?php echo esc_attr( $image_index ); ?>" value="<?php echo esc_url_raw( $image_url ); ?>">
-                    <a href="javascript:void(0)" class="button button-primary button-large image_button" id="image_button_<?php echo absint( $image_index );?>" data-index="<?php echo esc_attr( $image_index ); ?>"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
-                    <a href="javascript:void(0)" class="button button-secondary button-large remove-image-button" id="remove_image_button_<?php echo absint( $image_index ); ?>" data-index="<?php echo esc_attr( $image_index ); ?>" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
+                    <a href="javascript:void(0)" class="button button-primary button-large image_button" id="image_button_<?php echo esc_attr( $image_index );?>" data-index="<?php echo esc_attr( $image_index ); ?>"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
+                    <a href="javascript:void(0)" class="button button-secondary button-large remove-image-button" id="remove_image_button_<?php echo esc_attr( $image_index ); ?>" data-index="<?php echo esc_attr( $image_index ); ?>" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
                 </div>
             </div>
 		<?php
 		endif;
+
+		do_action(  'after_sub_section_html' );
 	}
 
 	/**

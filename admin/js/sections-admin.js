@@ -51,17 +51,23 @@ jQuery(function($){
       var section = document.querySelector('#section_wrap_'+section_index);
       var sub_section_wrap = section.querySelector('.sub_sections_wrap');
       var sub_section_index = sub_section_wrap.querySelectorAll('.tfr-sub-section').length;
+
       $.ajax({
           url: '/wp-admin/admin-ajax.php',
           type: 'POST',
           data: {
               action: 'add_sub_section',
-              section_index: parseInt(section_index),
-              sub_section_index: sub_section_index
+              section_index: parseInt(section_index, 10),
+              sub_section_index: parseInt(sub_section_index, 10)
           },
           dataType: "html",
           success: function (data) {
               $('#section_wrap_'+section_index+' > .sub_sections_wrap').append(data);
+
+              // Initialize WYSIWYG
+              tinymce.init(tinyMCEPreInit.mceInit.content);
+              tinyMCE.execCommand('mceAddEditor', true, 'sub_section_content_'+sub_section_index);
+              quicktags({id : 'sub_section_content_'+sub_section_index});
           },
           error: function (err) {
               console.error(err);
