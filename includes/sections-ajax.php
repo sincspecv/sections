@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Add sub section to section via ajax call
+ * Add sub section to section via AJAX request
  *
  * @return string   Sub Section HTML
  *

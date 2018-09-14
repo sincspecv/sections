@@ -106,7 +106,8 @@ class Sections_Fields extends Sections_Admin {
                     <a href="javascript:void(0)" class="button button-primary button-large image_button" id="image_button_<?php echo absint( $i );?>" data-index="<?php echo absint( $i ); ?>"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
                     <a href="javascript:void(0)" class="button button-secondary button-large remove-image-button" id="remove_image_button_<?php echo absint( $i ); ?>" data-index="<?php echo absint( $i ); ?>" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
                 </div>
-                <div class="sub_sections_wrap">
+                <hr>
+                <div class="sub_sections_wrap" style="background:#F7F7F7;padding: 0 0.75rem;">
 
                 <?php
 
@@ -153,7 +154,7 @@ class Sections_Fields extends Sections_Admin {
 			$content    = isset( $section['content'] ) ? $section['content'] : '';
 			$image_url  = isset( $section['image_url'] ) ? $section['image_url'] : '';
 			?>
-            <div class="tfr-sub-section">
+            <div class="tfr-sub-section" style="background:#F7F7F7;display:inline-block;width:100%;">
                 <p>
                     <label for="sub_section_strapline_<?php echo absint( $sub_section_index ); ?>"><?php _e( 'Strapline', 'sections' ); ?></label><br>
                     <input class="full-width" type="text" name="_sections[<?php echo absint( $section_index ); ?>][sub_sections][<?php echo absint( $sub_section_index ); ?>][strapline]" id="sub_section_strapline_<?php echo absint( $sub_section_index ); ?>" value="<?php echo esc_attr( $strapline ); ?>">
@@ -212,14 +213,14 @@ class Sections_Fields extends Sections_Admin {
 
 		if( isset( $_POST['_sections'] ) )
 		    $meta->save_meta( '_sections', $_POST['_sections'], 'stripslashes_deep' );
-		if ( isset( $_POST['_section_strapline'] ) )
-		    $meta->save_meta( '_section_strapline', $_POST['_section_strapline'] );
-		if ( isset( $_POST['_section_heading'] ) )
-		    $meta->save_meta( '_section_heading', $_POST['_section_heading'] );
-		if ( isset( $_POST['_section_content'] ) )
-		    $meta->save_meta( '_section_content', $_POST['_section_content'] );
-		if ( isset( $_POST['_section_background_image'] ) )
-		    $meta->save_meta( '_section_background_image', $_POST['_section_background_image'] );
+//		if ( isset( $_POST['_section_strapline'] ) )
+//		    $meta->save_meta( '_section_strapline', $_POST['_section_strapline'] );
+//		if ( isset( $_POST['_section_heading'] ) )
+//		    $meta->save_meta( '_section_heading', $_POST['_section_heading'] );
+//		if ( isset( $_POST['_section_content'] ) )
+//		    $meta->save_meta( '_section_content', $_POST['_section_content'] );
+//		if ( isset( $_POST['_section_background_image'] ) )
+//		    $meta->save_meta( '_section_background_image', $_POST['_section_background_image'] );
 	}
 
 }
