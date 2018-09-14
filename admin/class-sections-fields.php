@@ -9,6 +9,11 @@
  * @author     Matthew Schroeter <matt@thefancyrobot.com>
  */
 
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
 class Sections_Fields extends Sections_Admin {
 
 	public function __construct( $plugin_name, $version ) {
@@ -80,7 +85,6 @@ class Sections_Fields extends Sections_Admin {
                 <?php
                 // WYSIWYG editor for content
                 $content = do_shortcode( $content );
-                $content = esc_textarea( $content );
                 $content = wp_kses_post( $content );
                 wp_editor( htmlspecialchars_decode( $content ), 'section_content', array('textarea_name' => "_sections[{$i}][content]") );
                 ?>
@@ -93,12 +97,12 @@ class Sections_Fields extends Sections_Admin {
                 $show_remove_button = ! empty( $image_url ) ? 'inline-block' : 'none';
 
             ?>
-                <div id="section-image" style="display:inline-block;float:left;max-width:50%;">
+                <div id="section_image_<?php echo absint( $i ); ?>" style="display:inline-block;float:left;max-width:50%;">
                     <img src="<?php echo esc_url_raw( $image_url ) ?>" style="max-width: 100%;">
                 </div>
-                <input type="hidden" name="_sections[<?=$i?>][image_url]" id="section-image-src" value="<?php echo esc_url_raw( $image_url ); ?>">
-                <a href="" class="button button-primary button-large bg-image-button"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
-                <a href="" class="button button-secondary button-large remove-image-button" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
+                <input type="hidden" name="_sections[<?php echo absint( $i ); ?>][image_url]" id="section_image_src_<?php echo absint( $i ); ?>" value="<?php echo esc_url_raw( $image_url ); ?>">
+                <a href="javascript:void(0)" class="button button-primary button-large image_button" id="image_button_<?php echo absint( $i );?>" data-index="<?php echo absint( $i ); ?>"><?php esc_attr_e( $button_text, 'sections' ); ?></a><br />
+                <a href="javascript:void(0)" class="button button-secondary button-large remove-image-button" id="remove_image_button_<?php echo absint( $i ); ?>" data-index="<?php echo absint( $i ); ?>" style="display:<?php echo esc_attr( $show_remove_button ); ?>;margin-top: 0.75rem;"><?php _e( 'Remove Image', 'sections' ); ?></a>
             </div>
 
             <?php
@@ -108,7 +112,7 @@ class Sections_Fields extends Sections_Admin {
 			$sub_section_count = count( $sub_sections );
 
 			for ( $x = 0; $x < $sub_section_count; $x++ ) {
-			    self::sub_section_html( $sub_sections[$x], $i );
+			    self::sub_section_html( $sub_sections[$x], $i, $x );
             }
         endfor;
 
@@ -158,7 +162,6 @@ class Sections_Fields extends Sections_Admin {
                 <?php
                 // WYSIWYG editor for content
                 $content = do_shortcode( $content );
-                $content = esc_textarea( $content );
                 $content = wp_kses_post( $content );
                 wp_editor( htmlspecialchars_decode( $content ), 'section_content', array('textarea_name' => "_sections[{$section_index}][sub_sections][{$sub_section_index}][content]") );
                 ?>

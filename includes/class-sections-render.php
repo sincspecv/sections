@@ -9,6 +9,11 @@
  * @author     Matthew Schroeter <matt@thefancyrobot.com>
  */
 
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
 class Sections_Render {
 
 	/**
@@ -76,11 +81,13 @@ class Sections_Render {
 	 *
 	 * @return  string
 	 */
-	public function section_content( $content ) {
+	public function section_content( $page_content ) {
 		global $post;
 
 		// The section meta to pass to the section template
 		$sections = $this->get_section_meta( $post->ID );
+
+		do_action( 'before_section_content' );
 
 		foreach ( $sections as $section ) {
 			// Get the template to use
@@ -91,11 +98,13 @@ class Sections_Render {
 			$markup = '';
 
 			// Make sure there is section data
-			if( ! $section['strapline'] && ! $section['heading'] && ! $section['content'] && ! $section['background_image'] ) {
+			if( ! empty( $section['strapline'] ) && ! empty( $section['heading'] ) && ! empty( $section['content'] ) && ! empty( $section['image_url'] ) ) {
 
-				//DO NOTHING
-
-			} else {
+				// Sanitize section data
+				$strapline  = ! empty( $section['strapline'] ) ? esc_attr( $section['strapline'] ) : '';
+				$heading    = ! empty( $section['heading'] ) ? esc_attr( $section['heading'] ) : '';
+				$content    = ! empty( $section['content'] ) ? wpautop( wp_kses_post( do_shortcode( $section['content'] ) ) ) : '';
+				$image_url  = ! empty( $section['image_url'] ) ? esc_url_raw( $section['image_url'] ) : '';
 
 				// Render the template with the section meta
 				ob_start();
@@ -106,13 +115,13 @@ class Sections_Render {
 				ob_end_clean();
 
 				// Append sections to content and make images responsive
-				$content .= wp_make_content_images_responsive( $markup );
+				$page_content .= wp_make_content_images_responsive( $markup );
 
 			}
 		}
 
-		add_action( 'section_content' );
+		do_action( 'after_section_content' );
 
-		return $content;
+		return $page_content;
 	}
 }
